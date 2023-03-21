@@ -23,7 +23,7 @@ jobs:
         sed '/^#/d' level1.txt > level1_no_comments.txt
     - name: Convert blacklist to Mikrotik format
       run: |
-        echo "/ip firewall address-list" > FireHOL_Level1
+        echo "/ip firewall address-list" > FireHOL_Level1.rsc
         while IFS= read -r ip_address
         do
          echo "add list=blocklist address=$ip_address comment=\"FireHOL Level 1 Blocklist\"" >> "FireHOL_Level1.rsc"
