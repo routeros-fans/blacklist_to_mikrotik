@@ -26,7 +26,7 @@ jobs:
         echo "/ip firewall address-list" > FireHOL_Level1.rsc        
         while IFS= read -r ip_address
         do
-         echo "add list=blocklist address=$ip_address comment=\"FireHOL Level 1 Blocklist\"" >> "FireHOL_Level1.rsc"
+         echo "add list=blocklist address=$ip_address comment=\"Blocklist1\"" >> "FireHOL_Level1.rsc"
         done < "level1_no_comments.txt"
     - name: Configure Git user
       run: |
