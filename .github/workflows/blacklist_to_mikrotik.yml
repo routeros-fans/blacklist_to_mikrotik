@@ -34,7 +34,7 @@ jobs:
 
     - name: Commit and push changes
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
       run: |
         git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
         git add mikrotik_blacklist.rsc
