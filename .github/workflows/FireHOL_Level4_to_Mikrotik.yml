@@ -21,13 +21,14 @@ jobs:
     - name: Download FireHOL Level4 blacklist
       run: |
         curl -o level4.txt https://raw.githubusercontent.com/firehol/blocklist-ipsets/master/firehol_level4.netset
-
+        sed '/^#/d' level4.txt > level4_no_comments.txt
     - name: Convert blacklist to Mikrotik format
       run: |
         echo "/ip firewall address-list" > FireHOL_Level4.rsc
-        sed 's:#.*$::g' level4.txt
-        awk '!/^;/ && !/^$/ { print "add list=blacklist address=" $1 " comment=\"FireHOL Level4\"" }' level4.txt >> FireHOL_Level4.rsc
-
+        while IFS= read -r ip_address
+        do
+         echo "add list=blocklist address=$ip_address comment=\"FireHOL Level 4 Blocklist\"" >> "FireHOL_Level4.rsc"
+        done < "level4_no_comments.txt"
     - name: Configure Git user
       run: |
         git config --global user.name "GitHub Action"
