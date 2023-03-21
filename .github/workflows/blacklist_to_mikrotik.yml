@@ -1,0 +1,39 @@
+name: Update Mikrotik Firewall Blacklist
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # 每天凌晨12点运行
+  workflow_dispatch:
+
+jobs:
+  update-blacklist:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y jq
+
+    - name: Download FireHOL Level4 blacklist
+      run: |
+        curl -o level4.txt https://raw.githubusercontent.com/firehol/blocklist-ipsets/master/firehol_level4.netset
+
+    - name: Convert blacklist to Mikrotik format
+      run: |
+        echo "/ip firewall address-list" > mikrotik_blacklist.rsc
+        awk '!/^;/ && !/^$/ { print "add list=blacklist address=" $1 " comment=\"FireHOL Level4\"" }' level4.txt >> mikrotik_blacklist.rsc
+
+    - name: Configure Git user
+      run: |
+        git config --global user.name "GitHub Action"
+        git config --global user.email "github-action@users.noreply.github.com"
+
+    - name: Commit and push changes
+      run: |
+        git add mikrotik_blacklist.rsc
+        git commit -m "Update Mikrotik blacklist from FireHOL Level4"
+        git push
