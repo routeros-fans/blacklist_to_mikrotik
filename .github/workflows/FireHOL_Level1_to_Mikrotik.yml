@@ -22,7 +22,7 @@ jobs:
         curl -o level1.txt https://raw.githubusercontent.com/firehol/blocklist-ipsets/master/firehol_level1.netset
     - name: Convert blacklist to Mikrotik format
       run: |
-        echo "/ip firewall address-list" > mikrotik_blacklist.rsc
+        echo "/ip firewall address-list" > FireHOL_Level1.rsc
         awk '!/^;/ && !/^$/ { print "add list=blacklist address=" $1 " comment=\"FireHOL Level1\"" }' level1.txt >> FireHOL_Level1.rsc
     - name: Configure Git user
       run: |
@@ -34,5 +34,5 @@ jobs:
       run: |
         git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
         git add mikrotik_blacklist.rsc
-        git commit -m "Update Mikrotik blacklist from FireHOL Level4"
+        git commit -m "Update Mikrotik blacklist from FireHOL Level1"
         git push
