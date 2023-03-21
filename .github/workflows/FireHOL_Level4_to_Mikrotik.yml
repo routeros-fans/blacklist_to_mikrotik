@@ -1,4 +1,4 @@
-name: Update Mikrotik Firewall Blacklist
+name: FireHOL_Level4
 
 on:
   schedule:
