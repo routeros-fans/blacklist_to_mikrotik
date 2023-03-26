@@ -37,6 +37,8 @@ jobs:
         do
          echo "add list=blocklist address=$ip_address comment=\"Blocklist2\"" >> "FireHOL_Level2.rsc"
         done < "level2_no_comments.txt"
+        rm -fr level2.txt
+        rm -fr level2_no_comments.txt
         
     - name: Configure Git user
       run: |
