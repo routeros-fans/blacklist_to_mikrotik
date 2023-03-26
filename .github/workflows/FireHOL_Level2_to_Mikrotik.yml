@@ -12,6 +12,12 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
+      
+    - name: Remove FireHOL_Level2.rsc file
+      run: |
+        git rm FireHOL_Level2.rsc
+        git commit -m "Remove FireHOL_Level2.rsc from main branch"
+        git push
 
     - name: Install dependencies
       run: |
