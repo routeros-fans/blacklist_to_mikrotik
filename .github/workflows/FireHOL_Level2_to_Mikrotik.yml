@@ -13,13 +13,12 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
       
-    - name: Commit and push changes
+    - name: Remove old FireHOL_Level2 files
       env:
         GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
       run: |
         git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
-        git rm FireHOL_Level2.rsc
-        git push
+        git rm FireHOL_Level2.rsc || true
 
     - name: Install dependencies
       run: |
