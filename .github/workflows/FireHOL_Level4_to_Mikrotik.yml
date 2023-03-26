@@ -12,6 +12,13 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
+      
+    - name: Remove old FireHOL_Level4 files
+      env:
+        GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+      run: |
+        git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
+        git rm FireHOL_Level4.rsc || true      
 
     - name: Install dependencies
       run: |
@@ -22,6 +29,7 @@ jobs:
       run: |
         curl -o level4.txt https://raw.githubusercontent.com/firehol/blocklist-ipsets/master/firehol_level4.netset
         sed '/^#/d' level4.txt > level4_no_comments.txt
+        
     - name: Convert blacklist to Mikrotik format
       run: |
         echo "/ip firewall address-list" > FireHOL_Level4.rsc
@@ -29,6 +37,9 @@ jobs:
         do
          echo "add list=blocklist address=$ip_address comment=\"Blocklist4\"" >> "FireHOL_Level4.rsc"
         done < "level4_no_comments.txt"
+        rm -fr level4.txt
+        rm -fr level4_no_comments.txt
+        
     - name: Configure Git user
       run: |
         git config --global user.name "GitHub Action"
@@ -40,5 +51,5 @@ jobs:
       run: |
         git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
         git add FireHOL_Level4.rsc
-        git commit -m "Update Mikrotik blacklist from FireHOL Level4"
+        git commit --allow-empty -m "Update Mikrotik blacklist from FireHOL Level4"
         git push
