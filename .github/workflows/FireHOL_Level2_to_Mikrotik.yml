@@ -51,5 +51,5 @@ jobs:
       run: |
         git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
         git add FireHOL_Level2.rsc
-        git commit -a -m "Update Mikrotik blacklist from FireHOL Level2"
+        git commit -a -m "Update Mikrotik blacklist from FireHOL Level2 $(date +%Y%m%d)"
         git push
