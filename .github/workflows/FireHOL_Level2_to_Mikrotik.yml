@@ -13,6 +13,13 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
       
+    - name: Remove old FireHOL_Level2 files
+      env:
+        GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+      run: |
+        git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
+        git rm FireHOL_Level2.rsc || true      
+      
     - name: Install dependencies
       run: |
         sudo apt-get update
@@ -44,5 +51,5 @@ jobs:
       run: |
         git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
         git add FireHOL_Level2.rsc
-        git commit -m "Update Mikrotik blacklist from FireHOL Level2"
+        git commit --allow-empty -m "Update Mikrotik blacklist from FireHOL Level2 on $(date -u +"%Y-%m-%d %H:%M:%S %Z")"
         git push
