@@ -2,7 +2,7 @@ name: FireHOL_Level2
 
 on:
   schedule:
-    - cron: '0 0 * * *' # 每天凌晨12点运行
+    - cron: '0 */6 * * *' # 每天凌晨12点运行
   workflow_dispatch:
 
 jobs:
@@ -27,7 +27,7 @@ jobs:
         
     - name: Download FireHOL Level2 blacklist
       run: |
-        curl -o level2.txt https://raw.githubusercontent.com/firehol/blocklist-ipsets/master/firehol_level2.netset
+        curl -o level2.txt https://iplists.firehol.org/files/firehol_level2.netset
         sed '/^#/d' level2.txt > level2_no_comments.txt
         
     - name: Convert blacklist to Mikrotik format
