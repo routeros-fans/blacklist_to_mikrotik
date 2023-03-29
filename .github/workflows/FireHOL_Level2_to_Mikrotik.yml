@@ -2,7 +2,7 @@ name: FireHOL_Level2
 
 on:
   schedule:
-    - cron: '0 */6 * * *' # 每天凌晨12点运行
+    - cron: '0 */6 * * *' # 每6个小时运行
   workflow_dispatch:
 
 jobs:
