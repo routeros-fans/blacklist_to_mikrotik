@@ -34,7 +34,7 @@ jobs:
         echo "/ip firewall address-list" > blocklist-de_List.rsc        
         while IFS= read -r ip_address
         do
-         echo "add list=blocklist address=$ip_address comment=\"blocklist-de\"" >> "FireHOL_Level2.rsc"
+         echo "add list=blocklist address=$ip_address comment=\"blocklist-de\"" >> "blocklist-de_List.rsc"
         done < "blacklist.txt"
         rm -fr blacklist.txt
         
