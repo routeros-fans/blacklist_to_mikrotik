@@ -1,0 +1,53 @@
+name: blocklist-de_List
+
+on:
+  schedule:
+    - cron: '0 */6 * * *' # 每6个小时运行
+  workflow_dispatch:
+
+jobs:
+  update-blacklist:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      
+    - name: Remove old blocklist-de_List files
+      env:
+        GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+      run: |
+        git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
+        git rm blocklist-de_List.rsc || true      
+      
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y jq
+        
+    - name: Download blocklist-de blacklist
+      run: |
+        curl -o blacklist.txt http://lists.blocklist.de/lists/all.txt
+        
+    - name: Convert blacklist to Mikrotik format
+      run: |     
+        echo "/ip firewall address-list" > blocklist-de_List.rsc        
+        while IFS= read -r ip_address
+        do
+         echo "add list=blocklist address=$ip_address comment=\"blocklist-de\"" >> "FireHOL_Level2.rsc"
+        done < "blacklist.txt"
+        rm -fr blacklist.txt
+        
+    - name: Configure Git user
+      run: |
+        git config --global user.name "GitHub Action"
+        git config --global user.email "github-action@users.noreply.github.com"
+        
+    - name: Commit and push changes
+      env:
+        GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+      run: |
+        git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
+        git add blocklist-de_List.rsc
+        git commit --allow-empty -m "Update Mikrotik blacklist from blocklist-de_List on $(date -u +"%Y-%m-%d %H:%M:%S %Z")"
+        git push
